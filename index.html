@@ -12,6 +12,9 @@
 <meta name="apple-mobile-web-app-title" content="Hurbil">
 <script>
   if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((regs) => {
+      for (let reg of regs) { reg.unregister(); }
+    });
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/Hurbill-app/sw.js', { scope: '/Hurbill-app/' });
     });
@@ -24,16 +27,13 @@
     --primary: #447458;
     --primary-dark: #335842;
     --primary-light: #E8F0EB;
-    --secondary: #4B7BA6;
     --text: #1F2923;
     --muted: #5A6960;
     --border: #DCE3DE;
     --radius: 18px;
     --font-scale: 1;
   }
-  body.easy-mode {
-    --font-scale: 1.22;
-  }
+  body.easy-mode { --font-scale: 1.22; }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { background: var(--bg); color: var(--text); font-size: calc(16px * var(--font-scale)); line-height: 1.5; padding-bottom: 40px; }
   header { background: var(--card); padding: 14px 18px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
@@ -63,4 +63,275 @@
   .service-opt.selected { border-color: var(--primary); background: var(--primary-light); }
   .service-opt strong { display: block; font-size: 1em; }
   .service-opt span { font-size: 0.85em; color: var(--muted); }
-  .price-tag { font-weight: 800; color: var(--primary-dark); font-size: 0.95em
+  .price-tag { font-weight: 800; color: var(--primary-dark); font-size: 0.95em; white-space: nowrap; margin-left: 10px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-weight: 700; font-size: 0.9em; margin-bottom: 4px; }
+  .field input, .field select { width: 100%; padding: 13px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 1em; background: var(--card); }
+  .req-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+  .badge { display: inline-block; background: var(--primary-light); color: var(--primary-dark); font-size: 0.78em; font-weight: 700; padding: 3px 9px; border-radius: 999px; margin-bottom: 6px; }
+  .back-btn { background: none; border: none; color: var(--primary-dark); font-weight: 700; font-size: 0.95em; cursor: pointer; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-row">
+    <div class="brand">
+      <img src="/Hurbill-app/logo.webp" alt="Logo Hurbil">
+      <div>
+        <div class="brand-title">Hurbil · Siempre cerca de ti</div>
+        <div class="brand-sub">📍 Bilbao · Acompañamiento cercano</div>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="chip active" id="lang-es" onclick="setLang('es')">ES</button>
+    <button class="chip" id="lang-eu" onclick="setLang('eu')">EU</button>
+    <button class="chip" id="easy-btn" onclick="toggleEasy()">👁️ Modo Fácil</button>
+    <button class="chip" onclick="speakHero()">🔊 Escuchar</button>
+  </div>
+</header>
+
+<main>
+  <section id="view-home" class="view active">
+    <div class="hero">
+      <h1 id="t-hero-title">¿En qué podemos ayudarte hoy?</h1>
+      <p id="t-hero-sub">Pide una persona de confianza que vaya a casa en Bilbao. Tú eliges qué necesitas y cuándo.</p>
+    </div>
+
+    <button class="btn-main" onclick="showView('request')">
+      <span>💚</span> <span id="t-btn-ask">Pedir ayuda ahora</span>
+    </button>
+
+    <button class="btn-sec" onclick="showView('list')">
+      <span>📋 <span id="t-btn-list">Mis solicitudes</span></span>
+      <span id="req-count">0</span>
+    </button>
+
+    <button class="btn-sec" onclick="showView('plans')">
+      <span>🤝 <span id="t-btn-plans">Comunidad y planes Bilbao</span></span>
+      <span>→</span>
+    </button>
+
+    <a class="btn-sec btn-call" href="tel:644244017">
+      <span>📞 <span id="t-btn-call">Llamar directo: 644 244 017</span></span>
+      <span>Llamar</span>
+    </a>
+
+    <div class="trust-card">
+      <h3 id="t-trust-title">🛡️ Siempre sabrás quién viene</h3>
+      <p id="t-trust-desc">Trato cercano, puntual y sin prisas. Antes de cada visita confirmamos por teléfono o WhatsApp quién acudirá y a qué hora exacta.</p>
+    </div>
+  </section>
+
+  <section id="view-request" class="view">
+    <button class="back-btn" onclick="showView('home')">← Volver al inicio</button>
+    <h2 style="margin-bottom:6px;">¿Qué necesitas?</h2>
+    <p style="color:var(--muted);font-size:0.9em;margin-bottom:12px;">Elige una opción y déjanos tus datos.</p>
+
+    <div class="service-grid">
+      <div class="service-opt selected" onclick="selectService(this, 'Acompañamiento médico / gestiones (18 €/h)')">
+        <div><strong>🏥 Médico y gestiones</strong><span>Ir al ambulatorio, farmacia o banco</span></div>
+        <div class="price-tag">18 €/h</div>
+      </div>
+      <div class="service-opt" onclick="selectService(this, 'Paseo y compañía en casa (16 €/h)')">
+        <div><strong>🚶 Paseo y conversación</strong><span>Salir a caminar por el barrio o charlar</span></div>
+        <div class="price-tag">16 €/h</div>
+      </div>
+      <div class="service-opt" onclick="selectService(this, 'Compra y recados cercanos (15 €/h)')">
+        <div><strong>🛒 Compra y recados</strong><span>Hacer la compra juntos o traértela a casa</span></div>
+        <div class="price-tag">15 €/h</div>
+      </div>
+      <div class="service-opt" onclick="selectService(this, 'Ayuda con el móvil y trámites (17 €/h)')">
+        <div><strong>📱 Ayuda con el móvil</strong><span>Osakidetza, citas, fotos o videollamadas</span></div>
+        <div class="price-tag">17 €/h</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Tu nombre (o de tu familiar)</label>
+      <input type="text" id="in-name" placeholder="Ej: Miren / Aimar">
+    </div>
+    <div class="field">
+      <label>Barrio en Bilbao</label>
+      <select id="in-zone">
+        <option>Deusto / San Ignacio</option>
+        <option>Indautxu / Abando</option>
+        <option>Casco Viejo / Santutxu</option>
+        <option>Rekalde / Basurto</option>
+        <option>Uribarri / Txurdinaga</option>
+        <option>Otro barrio de Bilbao</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Teléfono de contacto</label>
+      <input type="tel" id="in-phone" placeholder="Ej: 600 000 000">
+    </div>
+    <div class="field">
+      <label>¿Cuándo te viene bien?</label>
+      <input type="text" id="in-when" placeholder="Ej: Mañana por la mañana a las 10:30">
+    </div>
+
+    <button class="btn-main" onclick="saveRequest()">✅ Confirmar y avisar por WhatsApp</button>
+  </section>
+
+  <section id="view-list" class="view">
+    <button class="back-btn" onclick="showView('home')">← Volver al inicio</button>
+    <h2 style="margin-bottom:12px;">Mis solicitudes guardadas</h2>
+    <div id="requests-container"></div>
+  </section>
+
+  <section id="view-plans" class="view">
+    <button class="back-btn" onclick="showView('home')">← Volver al inicio</button>
+    <h2 style="margin-bottom:8px;">Comunidad y planes en Bilbao</h2>
+    <p style="color:var(--muted);font-size:0.92em;margin-bottom:14px;">Actividades tranquilas y acompañadas para disfrutar del barrio.</p>
+
+    <div class="req-item">
+      <span class="badge">Martes · 11:00 h</span>
+      <h3>☕ Café y charla en Indautxu</h3>
+      <p style="color:var(--muted);font-size:0.9em;margin-top:4px;">Encuentro en grupo reducido con acompañamiento desde casa si lo necesitas.</p>
+    </div>
+    <div class="req-item">
+      <span class="badge">Jueves · 10:30 h</span>
+      <h3>🌳 Paseo suave por Doña Casilda</h3>
+      <p style="color:var(--muted);font-size:0.9em;margin-top:4px;">Caminata tranquila a tu ritmo con paradas y buena compañía.</p>
+    </div>
+    <div class="req-item">
+      <span class="badge">Bono Mensual</span>
+      <h3>💚 Bono Tranquilidad (4 visitas/mes)</h3>
+      <p style="color:var(--muted);font-size:0.9em;margin-top:4px;">Seguimiento semanal fijo con la misma persona de confianza.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  let selectedService = 'Acompañamiento médico / gestiones (18 €/h)';
+  let currentLang = 'es';
+
+  const texts = {
+    es: {
+      title: '¿En qué podemos ayudarte hoy?',
+      sub: 'Pide una persona de confianza que vaya a casa en Bilbao. Tú eliges qué necesitas y cuándo.',
+      ask: 'Pedir ayuda ahora',
+      list: 'Mis solicitudes',
+      plans: 'Comunidad y planes Bilbao',
+      call: 'Llamar directo: 644 244 017',
+      trustT: '🛡️ Siempre sabrás quién viene',
+      trustD: 'Trato cercano, puntual y sin prisas. Antes de cada visita confirmamos por teléfono o WhatsApp quién acudirá y a qué hora exacta.'
+    },
+    eu: {
+      title: 'Zertan lagun zaitzakegu gaur?',
+      sub: 'Eskatu konfiantzazko pertsona bat Bilbon etxera etortzeko. Zuk aukeratzen duzu zer eta noiz.',
+      ask: 'Laguntza eskatu orain',
+      list: 'Nire eskaerak',
+      plans: 'Bilboko komunitatea eta planak',
+      call: 'Deitu zuzenean: 644 244 017',
+      trustT: '🛡️ Beti jakingo duzu nor datorren',
+      trustD: 'Gertuko tratua, puntuala eta presarik gabea. Bisita bakoitzaren aurretik telefonoz edo WhatsApp bidez baieztatzen dugu nor joango den.'
+    }
+  };
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.getElementById('lang-es').classList.toggle('active', lang === 'es');
+    document.getElementById('lang-eu').classList.toggle('active', lang === 'eu');
+    const t = texts[lang];
+    document.getElementById('t-hero-title').textContent = t.title;
+    document.getElementById('t-hero-sub').textContent = t.sub;
+    document.getElementById('t-btn-ask').textContent = t.ask;
+    document.getElementById('t-btn-list').textContent = t.list;
+    document.getElementById('t-btn-plans').textContent = t.plans;
+    document.getElementById('t-btn-call').textContent = t.call;
+    document.getElementById('t-trust-title').textContent = t.trustT;
+    document.getElementById('t-trust-desc').textContent = t.trustD;
+  }
+
+  function toggleEasy() {
+    document.body.classList.toggle('easy-mode');
+    document.getElementById('easy-btn').classList.toggle('active');
+  }
+
+  function speakHero() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const msg = new SpeechSynthesisUtterance(texts[currentLang].title + '. ' + texts[currentLang].sub);
+      msg.lang = currentLang === 'eu' ? 'eu-ES' : 'es-ES';
+      window.speechSynthesis.speak(msg);
+    }
+  }
+
+  function showView(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+    if (name === 'list') renderRequests();
+    window.scrollTo(0, 0);
+  }
+
+  function selectService(el, label) {
+    document.querySelectorAll('.service-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedService = label;
+  }
+
+  function getRequests() {
+    return JSON.parse(localStorage.getItem('hurbil_requests') || '[]');
+  }
+
+  function updateCount() {
+    document.getElementById('req-count').textContent = getRequests().length;
+  }
+
+  function saveRequest() {
+    const name = document.getElementById('in-name').value.trim();
+    const zone = document.getElementById('in-zone').value;
+    const phone = document.getElementById('in-phone').value.trim();
+    const when = document.getElementById('in-when').value.trim();
+
+    if (!name || !phone) {
+      alert('Por favor, escribe tu nombre y teléfono para poder contactarte.');
+      return;
+    }
+
+    const req = {
+      id: Date.now(),
+      service: selectedService,
+      name,
+      zone,
+      phone,
+      when: when || 'A convenir',
+      date: new Date().toLocaleDateString('es-ES')
+    };
+
+    const all = getRequests();
+    all.unshift(req);
+    localStorage.setItem('hurbil_requests', JSON.stringify(all));
+    updateCount();
+
+    const waText = encodeURIComponent(
+      `Hola Hurbil, soy ${name} (${zone}). Necesito: ${selectedService}. Cuándo: ${req.when}. Mi teléfono: ${phone}`
+    );
+    window.open(`https://wa.me/34644244017?text=${waText}`, '_blank');
+    showView('list');
+  }
+
+  function renderRequests() {
+    const all = getRequests();
+    const box = document.getElementById('requests-container');
+    if (!all.length) {
+      box.innerHTML = '<p style="color:var(--muted);">Aún no tienes solicitudes guardadas.</p>';
+      return;
+    }
+    box.innerHTML = all.map(r => `
+      <div class="req-item">
+        <span class="badge">${r.date} · ${r.zone}</span>
+        <h3>${r.service}</h3>
+        <p style="font-size:0.92em;margin-top:4px;"><strong>${r.name}</strong> · Tel: ${r.phone}</p>
+        <p style="font-size:0.88em;color:var(--muted);">Horario: ${r.when}</p>
+      </div>
+    `).join('');
+  }
+
+  updateCount();
+</script>
+</body>
+</html>
