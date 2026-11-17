@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hurbil · Siempre cerca de ti</title>
+<link rel="manifest" href="/Hurbil-app/manifest.json">
+<meta name="theme-color" content="#447458">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Hurbil">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/Hurbil-app/sw.js', { scope: '/Hurbil-app/' });
+    });
+  }
+</script>
+<style>
+:root{--bg:#F6F7F5;--tx:#1E293B;--mu:#5b6676;--g:#2D5373;--gh:#1F3F59;--pg:#447458;--pgh:#386049;--g2:#447458;--gs:#EBF1F6;--sb:#D6E2EC;--bd:#E2E8F0;--card:#fff;--on:#fff;--amt:#2f5d46}
+body.hc{--bg:#000;--tx:#fff;--mu:#fff;--g:#FFEB3B;--gh:#FFD600;--pg:#FFEB3B;--pgh:#FFD600;--g2:#FFEB3B;--gs:#000;--sb:#FFEB3B;--bd:#FFEB3B;--card:#000;--on:#000;--amt:#FFEB3B}
+*{box-sizing:border-box}html{font-size:18px;scroll-padding-bottom:180px}
+body{margin:0;background:var(--bg);color:var(--tx);font:1rem/1.55 Nunito,system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Nunito,system-ui,sans-serif;font-weight:800;color:var(--tx);margin:.2em 0;line-height:1.25}
+h1{font-size:1.7rem}h2{font-size:1.4rem}h3{font-size:1.15rem}
+.muted{color:var(--mu)}.small{font-size:.85rem}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:4px solid var(--g);outline-offset:2px}body.hc :focus-visible{outline-color:#fff}
+.bar{position:sticky;top:0;z-index:9;background:var(--card);border-bottom:1px solid var(--bd);padding:.5rem 1rem;font-size:16px}
+.bar .in{max-width:640px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center;justify-content:space-between}
+.bar .brand{display:flex;gap:.6rem;align-items:center;border:none;background:none;padding:0;text-align:left;flex:1;min-width:200px;color:var(--tx)}
+.brand b{display:block;font-weight:800;line-height:1.2}.brand small{color:var(--mu);font-weight:700}
+.logo{height:44px;width:auto;background:#fff;border-radius:8px}
+.ctl{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.seg{display:flex;border:1px solid var(--sb);border-radius:14px;overflow:hidden;background:var(--card)}
+.bar button.sg,.bar button.circ,.bar button.pill,.bar button.tg{min-height:44px;min-width:44px;border:none;background:transparent;color:var(--tx);font-weight:800;padding:0 .8rem}
+.bar button.sg.on,.bar button.tg.on{background:var(--g);color:var(--on)}
+.bar button.circ{border:1px solid var(--sb);border-radius:50%;padding:0}
+.bar button.pill,.bar button.tg{background:var(--gs);border:1px solid var(--sb);border-radius:14px}
+.bar button.tg.on{background:var(--g)}
+main{max-width:640px;margin:0 auto;padding:1rem 1rem 170px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:1.1rem;box-shadow:0 1px 3px rgba(30,41,59,.05);margin-bottom:1rem}
+.row{display:flex;gap:.6rem;align-items:flex-start}.row>*:first-child{flex:1}
+.spk{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--sb);background:var(--gs);font-size:1.15rem;line-height:1}
+.grid{display:grid;grid-template-columns:1fr;gap:.7rem}
+.stack{display:flex;flex-direction:column;gap:.7rem;margin:1rem 0}
+.big{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;min-height:64px;padding:.8rem 1.2rem;border:1px solid var(--sb);border-radius:16px;background:var(--gs);color:var(--tx);font-size:1.15rem;font-weight:800;text-decoration:none;text-align:center}
+.big.pri{background:var(--pg);border-color:var(--pg);color:var(--on)}.big.pri:hover{background:var(--pgh)}
+.big .ic{font-size:1.4rem}
+.btn{min-height:52px;padding:.5rem 1.2rem;border-radius:14px;border:1px solid var(--sb);background:var(--gs);color:var(--tx);font-weight:800;font-size:1.05rem}
+.btn.pri{background:var(--pg);border-color:var(--pg);color:var(--on)}.btn.pri:hover{background:var(--pgh)}
+.btn.on{background:var(--g);border-color:var(--g);color:var(--on)}
+.btn.wa{background:#2f7d4f;border-color:#2f7d4f;color:#fff;width:100%;margin-top:.6rem}
+body.hc .btn.wa{background:#FFEB3B;color:#000}
+.back{margin-bottom:.8rem}
+.opt{display:flex;gap:.4rem;align-items:center;border:2px solid var(--bd);border-radius:16px;background:var(--card);padding:.3rem}
+.opt.on{border-color:var(--g);background:var(--gs)}
+.pick{flex:1;display:flex;gap:.7rem;align-items:center;background:none;border:none;text-align:left;padding:.5rem;font-weight:700;font-size:1.05rem}
+.pick .ic{font-size:1.6rem}.pick small{display:block;color:var(--amt);font-weight:700}
+.prog{height:12px;background:var(--bd);border-radius:9px;overflow:hidden;margin:.4rem 0 1rem}
+.prog i{display:block;height:100%;background:var(--pg)}
+input,select,textarea{width:100%;min-height:52px;padding:.5rem .8rem;border:2px solid var(--sb);border-radius:12px;background:var(--card);margin:.3rem 0}
+label{font-weight:800;display:block;margin-top:.6rem}
+.chips{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0}
+.sos{background:#B94A48;color:#fff;border-radius:14px;padding:1rem;margin:.6rem 0;font-weight:800}
+.sos a{color:#fff;display:inline-block;margin-top:.4rem;font-size:1.3rem}
+.badge{display:inline-block;padding:.1rem .8rem;border-radius:99px;background:var(--gs);color:var(--amt);font-weight:800;border:1px solid var(--sb)}
+.star{font-size:2rem;background:none;border:none;color:#94A3B8;min-width:48px;min-height:48px}.star.on{color:#C9962B}body.hc .star.on{color:#FFEB3B}
+.msg{background:var(--gs);border-left:5px solid var(--g);padding:.5rem .8rem;border-radius:10px;margin:.4rem 0}
+.msg.me{background:var(--card);border-left-color:var(--pg)}
+.msgs{max-height:40vh;overflow:auto;margin:.5rem 0}
+.err{color:#B3261E;font-weight:800}body.hc .err{color:#FF8A80}
+.toast{background:var(--pg);color:var(--on);padding:.8rem 1rem;border-radius:14px;margin-bottom:1rem;font-weight:800}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:600px}
+td,th{border-bottom:1px solid var(--bd);padding:.4rem;text-align:left;vertical-align:top}td select{min-height:44px}
+footer{max-width:640px;margin:0 auto;text-align:center;padding:0 1rem 6rem;font-size:.85rem;color:var(--mu)}footer a{color:var(--mu)}
+.fabs{position:fixed;right:.8rem;bottom:.8rem;z-index:20;display:flex;flex-direction:row;gap:.5rem;align-items:center}
+.fab{min-height:48px;padding:0 1rem;border-radius:24px;border:none;font-weight:800;font-size:.95rem;box-shadow:0 4px 12px rgba(30,41,59,.25)}
+.fab.s{background:#B94A48;color:#fff}.fab.c{background:var(--g);color:var(--on)}
+.mod{position:fixed;inset:0;z-index:30;background:rgba(30,41,59,.6);display:flex;align-items:center;justify-content:center;padding:.8rem}
+.mbox{background:var(--card);border:1px solid var(--bd);border-radius:20px;max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:1.2rem}
+.big.sosb2{background:#B94A48;border-color:#B94A48;color:#fff;margin:.6rem 0}
+.svc{border:2px solid var(--bd);border-radius:18px;background:var(--card);padding:.3rem;margin-bottom:.7rem}
+.svc.on{background:var(--gs);border-color:var(--pg)}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;padding:.2rem .5rem .6rem}
+.pw{display:flex;gap:.3rem;align-items:center}
+.pl{border:2px solid var(--sb);background:var(--card);border-radius:99px;padding:.3rem .9rem;min-height:44px;font-weight:700;text-align:left}
+.pl.on{background:var(--g);border-color:var(--g);color:var(--on)}
+.spk.sm{width:36px;height:36px;font-size:.95rem}
+.chk{display:flex;gap:.6rem;align-items:flex-start;font-weight:700;margin:0}
+.chk input{width:28px;height:28px;min-height:28px;margin:.2rem;flex:none}
+.bd{border-top:1px solid var(--bd);margin-top:.6rem;padding-top:.6rem}
+.hb{display:flex;gap:.6rem;align-items:center}.hb .big{flex:1;width:auto}
+.big.bl{background:var(--g);border-color:var(--g);color:var(--on)}
+.spk.talk{background:var(--g);border-color:var(--g);color:var(--on)}
+body.easy .sec{display:none!important}
+body.easy .big{min-height:84px;font-size:1.35rem}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<main id="app"></main>
+<footer class="sec"><p id="ft"></p><a href="#admin" id="adm"></a></footer>
+<div id="ov"></div>
+<script>
+const D={
+brand:["Hurbil · Siempre cerca de ti","Hurbil · Beti zure ondoan"],
+easy:["Modo Fácil","Modu Erraza"],hc:["Alto contraste","Kontraste handia"],
+welcome:["Hola, {0}. Aquí tienes a quien te acompañe cuando lo necesites.","Kaixo, {0}. Hemen duzu behar duzunean lagunduko dizun jendea."],
+mission:["Compañía, recados y planes en comunidad para personas mayores de Bilbao.","Bilboko adinekoentzako lagunartea, mandatuak eta komunitate-planak."],
+b1:["Pedir ayuda","Laguntza eskatu"],b2:["Mis solicitudes","Nire eskaerak"],b3:["Comunidad y planes","Komunitatea eta planak"],b4:["Mi perfil","Nire profila"],
+home:["← Volver al inicio","← Hasierara itzuli"],
+trust:["Llámanos a Bilbao, también en emergencias: 644 270 017","Deitu iezaguzu Bilbora, larrialdietan ere bai: 644 270 017"],
+team:["Quienes estamos detrás: Aimar Fernandez, Ander Herrera, Eder Fernandez y Eidan Irastorza.","Gure atzean gaudenak: Aimar Fernandez, Ander Herrera, Eder Fernandez eta Eidan Irastorza."],
+call:["Llamar al 644 270 017","644 270 017 zenbakira deitu"],
+step:["Paso {0} de 5","{0}. urratsa (5etik)"],prev:["← Anterior","← Aurrekoa"],next:["Siguiente →","Hurrengoa →"],
+q1:["¿Qué necesitas?","Zer behar duzu?"],
+s0:["Paseo y compañía en el barrio","Auzoan paseoa eta lagunartea"],
+s1:["Recados, farmacia o compra","Mandatuak, farmazia edo erosketak"],
+s2:["Ayuda con el móvil, citas o trámites","Mugikorrean, hitzorduetan edo izapideetan laguntza"],
+s3:["Acompañamiento al centro de salud u hospital","Osasun-zentrora edo ospitalera laguntza"],
+s4:["Compañía y charla en casa: lectura, juegos o café","Lagunartea etxean: irakurketa, jolasak edo kafea"],
+s5:["Pequeñas tareas del hogar y orden ligero","Etxeko lan txikiak eta ordena arina"],
+s6:["Otro (escribe qué necesitas)","Beste bat (idatzi zer behar duzun)"],
+price:["13 € la hora","13 € orduko"],
+otherph:["Cuéntanos qué necesitas…","Kontatu zer behar duzun…"],
+q2:["Modalidad y tarifas","Modalitatea eta tarifak"],
+today:["Hoy","Gaur"],tomorrow:["Mañana","Bihar"],morn:["Por la mañana 11:00","Goizean 11:00"],aft:["Por la tarde 17:00","Arratsaldean 17:00"],
+date:["Día","Eguna"],time:["Hora","Ordua"],
+q3:["¿Cuándo y cómo repartir las horas?","Noiz eta nola banatu orduak?"],
+calc:["{0} h × 13 € = {1} €","{0} h × 13 € = {1} €"],
+addr:["Dirección en Bilbao","Bilboko helbidea"],
+q4:["Tus datos de contacto","Zure harremanetarako datuak"],shareq:["¿Compartes plan con vecinos para ahorrar?","Auzokideekin partekatu nahi duzu plana aurrezteko?"],
+shareexp:["Si abres el plan a vecinos del barrio, todos pagáis menos: 15 % de descuento con 2 personas y 20 % con 3.","Planari auzokideak gehitzen badizkiozu, denok gutxiago ordaintzen duzu: %15 2 pertsonarekin eta %20 3rekin."],
+sh0:["Solo yo","Ni bakarrik"],sh1:["Con 1 vecino (2 personas · −15 %)","Auzokide 1ekin (2 pertsona · −%15)"],sh2:["Con 2 vecinos (3 personas · −20 %)","2 auzokiderekin (3 pertsona · −%20)"],
+sum:["Resumen","Laburpena"],total:["Total","Guztira"],disc:["Descuento","Deskontua"],
+confirm:["Confirmar solicitud","Eskaera berretsi"],
+need:["Completa este paso para continuar.","Osatu urrats hau jarraitzeko."],
+done:["¡Solicitud enviada! Te avisaremos cuando tengas acompañante.","Eskaera bidali da! Laguntzailea dugunean abisatuko dizugu."],
+st0:["Pendiente de asignar","Esleitzeko dago"],st1:["Aceptada","Onartua"],st2:["En curso","Abian"],st3:["Completada","Amaituta"],st4:["Rechazada","Baztertua"],
+sos:["🆘 Asistencia inmediata","🆘 Berehalako laguntza"],
+sosn:["Hoy tienes cita. Si necesitas ayuda urgente, llama ahora.","Gaur hitzordua duzu. Premiazko laguntza behar baduzu, deitu orain."],
+wa:["Avisar a mi familiar por WhatsApp","Familiarrari WhatsApp bidez abisatu"],
+wamsg:["Hola, te aviso de mi cita en Hurbil: {0}, el {1} a las {2}, en {3}. Acompañante: {4}.","Kaixo, Hurbilen dudan hitzorduaren berri: {0}, {1}, {2}etan, {3}. Laguntzailea: {4}."],
+nofam:["Añade antes el teléfono de tu familiar en Mi perfil.","Gehitu lehenik zure familiarraren telefonoa Nire profilean."],
+noreq:["Todavía no tienes solicitudes.","Oraindik ez duzu eskaerarik."],
+nobody:["Sin asignar","Esleitu gabe"],
+rate:["Valora a {0}","Baloratu {0}"],comment:["Escribe un comentario","Idatzi iruzkin bat"],send:["Enviar","Bidali"],
+thanks:["Gracias por valorar","Eskerrik asko baloratzeagatik"],
+late:["El plazo de 24 horas para valorar ha terminado.","Balorazioa egiteko 24 orduko epea amaitu da."],
+join:["Unirme al plan","Planera batu"],leave:["Salir del plan","Planetik irten"],
+ppl:["{0} personas · descuento {1} % · {2} €/h","{0} pertsona · deskontua %{1} · {2} €/h"],
+chat:["Chat del grupo","Taldearen txata"],msgph:["Escribe un mensaje…","Idatzi mezu bat…"],
+prof:["Mi perfil","Nire profila"],name:["Nombre","Izena"],barrio:["Barrio o dirección en Bilbao","Auzoa edo helbidea Bilbon"],
+fam:["Teléfono de tu familiar de confianza","Konfiantzazko familiarraren telefonoa"],
+save:["Guardar","Gorde"],saved:["Guardado","Gordeta"],
+admin:["Panel de administración","Administrazio-panela"],worker:["Acompañante","Laguntzailea"],state:["Estado","Egoera"],
+sim:["Simular completada","Amaitua simulatu"],avg:["Media","Batez bestekoa"],none:["Sin valoraciones","Baloraziorik ez"],
+oth:["Otro (especificar)","Beste bat (zehaztu)"],subq:["Elige qué necesitas exactamente","Aukeratu zer behar duzun zehazki"],
+sos2:["🆘 SOS Emergencia","🆘 SOS Larrialdia"],sosn2:["Ayuda urgente. Llama ahora o avisa a tu familiar.","Premiazko laguntza. Deitu orain edo abisatu zure familiarrari."],
+sosd:["Tu dirección en Bilbao","Zure helbidea Bilbon"],wasosm:["¡URGENTE! Necesito ayuda. Estoy en {0}. Llama a Hurbil: 644 270 017.","BEREHALA! Laguntza behar dut. Hemen nago: {0}. Deitu Hurbili: 644 270 017."],
+close:["Cerrar","Itxi"],tteam:["Equipo Hurbil","Hurbil taldea"],vec:["Vecinos","Auzokideak"],gocomm:["Ir a Comunidad y planes","Komunitatera joan"],
+autoreply:["Gracias por escribirnos. Te respondemos enseguida. Si es urgente, llama al 644 270 017.","Eskerrik asko idazteagatik. Laster erantzungo dizugu. Premiazkoa bada, deitu 644 270 017 zenbakira."],
+login:["Iniciar sesión","Saioa hasi"],create:["Crear cuenta","Kontua sortu"],fullname:["Nombre completo","Izen-abizenak"],user:["Nombre de usuario (o correo)","Erabiltzaile-izena (edo posta)"],
+contact:["Correo electrónico o teléfono","Posta elektronikoa edo telefonoa"],pass:["Contraseña","Pasahitza"],show:["👁 Mostrar","👁 Erakutsi"],hide:["🙈 Ocultar","🙈 Ezkutatu"],
+logout:["Cerrar sesión","Saioa itxi"],badlogin:["Usuario o contraseña incorrectos.","Erabiltzaile edo pasahitz okerra."],needall:["Rellena nombre, usuario, contacto y contraseña (mín. 4).","Bete izena, erabiltzailea, kontaktua eta pasahitza (gutxienez 4)."],
+fol:["Seguir","Jarraitu"],fing:["Siguiendo","Jarraitzen"],tab_plans:["Planes y chat","Planak eta txata"],tab_neigh:["Vecinos del barrio · Seguir a gente","Auzokideak · Jarraitu jendeari"],neighh:["Vecinos del barrio","Auzoko auzokideak"],
+hq:["¿En qué podemos ayudarte hoy?","Zertan lagun dezakegu gaur?"],hsub:["Pide a una persona de confianza que vaya a casa. Tú eliges qué necesitas y cuándo.","Eskatu konfiantzazko pertsona bati etxera joateko. Zuk aukeratzen duzu zer behar duzun eta noiz."],
+call2:["Llamar: 644 270 017","Deitu: 644 270 017"],safe:["Siempre sabrás quién viene","Beti jakingo duzu nor datorren"],
+safetxt:["Presentamos a la persona que irá a casa antes de la primera visita. Nuestra oficina de Bilbao también atiende en persona y por teléfono.","Lehen bisitaren aurretik etxera joango den pertsona aurkeztuko dizugu. Gure Bilboko bulegoak pertsonalki eta telefonoz ere arreta ematen du."],
+tm_h:["Horas sueltas (pago por uso)","Ordu bakarrak (erabilera arabera)"],tm_b:["Bonos de horas","Ordu-bonuak"],tm_m:["Planes mensuales","Hileko planak"],
+bonol:["Bono {0} h · {1} €","{0} h-ko bonua · {1} €"],bonox:["Bono de {0} h + {1} h extra a 12,50 €/h","{0} h-ko bonua + {1} ordu gehigarri (12,50 €/ordu)"],
+bonoc:["Bono {0} horas · {1} € ({2} €/h)","{0} orduko bonua · {1} € ({2} €/ordu)"],conv:["¡Con {0} horas pasas automáticamente al Bono de {0} h!","{0} orduekin automatikoki {0} h-ko bonura pasatzen zara!"],
+permes:["{0} €/mes","{0} €/hil"],extraq:["Puedes añadir horas extra de 1 en 1 a 12,50 €/h.","Ordu gehigarriak 1ean gehi ditzakezu, 12,50 €/orduko."],moreh:["+1 hora","+1 ordu"],lessh:["−1 hora","−1 ordu"],
+nodisc:["El descuento por compartir solo se aplica a horas sueltas.","Partekatzeagatiko deskontua ordu bakarretan bakarrik aplikatzen da."],tar:["Tarifas","Tarifak"],myplan:["Tu bono o plan actual","Zure bono edo plan unekoa"],
+b_chats:["Chats","Txatak"],mutual:["Solo puedes chatear con personas con las que os seguís mutuamente (tú a ella y ella a ti).","Elkarri jarraitzen diozuen pertsonekin bakarrik txateatu dezakezu (zuk berari eta berak zuri)."],
+supp:["Equipo Hurbil (Soporte 644 270 017)","Hurbil taldea (Laguntza 644 270 017)"],nomut:["Aún no tienes seguimientos mutuos. Sigue a vecinos en Comunidad.","Oraindik ez duzu elkarrekiko jarraipenik. Jarraitu auzokideei Komunitatean."],
+rplan:["🤝 Propuesta de plan conjunto","🤝 Plan bateratuaren proposamena"],rmut:["🤝 Seguimiento mutuo","🤝 Elkarrekiko jarraipena"],backl:["← Chats","← Txatak"],
+tab_wall:["📣 Muro","📣 Horma"],pj:["👥 Plan conjunto (2+ personas + trabajador de Hurbil)","👥 Plan bateratua (2+ pertsona + Hurbilgo langilea)"],
+inplan:["✅ Estás en el plan conjunto","✅ Plan bateratuan zaude"],joinp:["+ Unirme al plan conjunto","+ Plan bateratura batu"],inter:["{0} interesados","{0} interesdun"],
+chatw:["💬 Abrir chat con {0}","💬 Ireki txata {0}rekin"],newp:["Publicar una propuesta de plan conjunto","Plan bateratuaren proposamena argitaratu"],pub:["📣 Publicar propuesta","📣 Proposamena argitaratu"],
+dist:["Barrio de Bilbao","Bilboko auzoa"],cat:["Categoría","Kategoria"],youf:["Te sigue","Zuri jarraitzen dizu"],fchat:["💬 Chat","💬 Txata"],
+apass:["Contraseña de administración","Administrazio-pasahitza"],enter:["Entrar","Sartu"],badpass:["Contraseña incorrecta.","Pasahitz okerra."],accept:["Aceptar","Onartu"],reject:["Rechazar","Baztertu"],accts:["Cuentas registradas","Erregistratutako kontuak"],
+q5:["Resumen y confirmación","Laburpena eta berrespena"],m_h:["Una sola vez (Normal · 13 €/h)","Behin bakarrik (Arrunta · 13 €/ordu)"],
+recb:["Recurrente · Bono {0} horas ({1} € base + 12,50 €/h extra)","Errepikakorra · {0} orduko bonua ({1} € oinarria + 12,50 €/orduko gehigarria)"],mon:["Planes mensuales","Hileko planak"],
+phone:["Teléfono","Telefonoa"],tasks:["¿Qué tareas hay que hacer?","Zer zeregin egin behar dira?"],notes:["Notas (opcional)","Oharrak (aukerakoa)"],
+pubq:["Compartir este plan con mis seguidores (solo se mostrará tu nombre, tipo de servicio, fecha/hora y barrio, nunca tu teléfono ni dirección exacta)","Partekatu plan hau nire jarraitzaileekin (zure izena, zerbitzu mota, data/ordua eta auzoa bakarrik erakutsiko dira, inoiz ez zure telefonoa edo helbide zehatza)"],
+barrio2:["Barrio de Bilbao (se mostrará en el Muro)","Bilboko auzoa (Hormaan erakutsiko da)"],base:["Precio base","Oinarrizko prezioa"],
+fixedh:["Tu plan incluye {0} horas al mes. Elige el primer día y hora; el resto lo acordarás con tu acompañante.","Zure planak hilean {0} ordu ditu. Aukeratu lehen eguna eta ordua; gainerakoa zure laguntzailearekin adostuko duzu."],hoursl:["Horas","Orduak"],
+listen:["Escuchar","Entzun"],hrs:["h","h"]
+};
+const SV=['🚶','🛒','📱','🏥','☕','🏠','✏️'],W=['Aimar Fernandez','Ander Herrera','Eder Fernandez','Eidan Irastorza'];
+const iso=d=>{d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const DAY=864e5,now=Date.now();
+let S={modal:null,ct:'team',au:'login',sp:0,tab:'wall',fm:{name:'',user:'',contact:'',pass:'',addr:'',fam:''},
+th:{team:[{n:'Hurbil',x:'¡Hola! Somos el equipo de Hurbil. ¿En qué podemos ayudarte?'}],n1:[{n:'Amaia',x:'¡Hola, vecino! ¿Te apuntas al paseo del jueves?'}],n6:[{n:'Aimar',x:'Hola, ¿te apuntas al café del viernes en Ametzola?'}]},
+np:{cat:0,d:'',tm:'',b:''},cv:null,adm:0,
+neigh:[{id:1,n:'Amaia Etxebarria',u:'@amaia.ex',b:'Indautxu',i:['Paseos y café','Paseoak eta kafea'],f:1,m:1,c:'amaia@ejemplo.es',fam:'656 100 200',pl:'Bono 10 h'},
+{id:2,n:'Josu Mendizabal',u:'@josu_m',b:'Deusto',i:['Dominó y charlas','Dominoa eta berriketak'],f:0,m:1,c:'611 222 333',fam:'',pl:'Plan Cercanía'},
+{id:3,n:'Begoña Uriarte',u:'@begouri',b:'Casco Viejo',i:['Cine y compras en La Ribera','Zinema eta erosketak Erriberan'],f:0,m:0,k:1},
+{id:4,n:'Mikel Garai',u:'@mikel.g',b:'Abando',i:['Lectura y fotografía','Irakurketa eta argazkigintza'],f:0,m:0},
+{id:5,n:'Itziar Goikoetxea',u:'@itziar.g',b:'Rekalde',i:['Jardinería y cocina sencilla','Lorezaintza eta sukaldaritza xumea'],f:0,m:0},
+{id:6,n:'Aimar Fernandez Remirez',u:'@aimar.fdz',b:'Ametzola',i:['Compañía y cafés','Lagunartea eta kafeak'],f:1,m:1,r:1,c:'aimar.fdz@ejemplo.es',fam:'',pl:'Horas sueltas'}],
+wall:[{id:1,n:'Aimar Fernandez Remirez',u:'@aimar.fdz',cat:1,d:'20/11/2026',tm:'22:26',b:'Ametzola',j:['Aimar Fernandez Remirez'],nid:6},{id:2,n:'Amaia Etxebarria',u:'@amaia.ex',cat:0,d:'21/11/2026',tm:'11:00',b:'Indautxu',j:['Amaia Etxebarria','Josu Mendizabal'],nid:1}],
+lang:'es',fs:1,hc:0,easy:0,v:'home',w:{s:1,mode:'h',bh:5,plan:null,name:'',phone:'',tasks:'',notes:'',pub:0,barrio:'',svc:null,sub:null,other:'',date:'',time:'',hours:1,addr:'',share:0},err:'',msg:'',rt:{},
+prof:{in:1,name:'Aimar Fernandez',user:'@aimar_bilbao',contact:'aimar@ejemplo.es',pass:'hurbil123',addr:'Indautxu, Bilbao',fam:''},
+reqs:[{id:1,svc:0,other:'',date:iso(now),time:'17:00',hours:2,addr:'Calle Ercilla 24, Bilbao',people:1,total:26,st:1,w:'Ander Herrera',done:0,rating:null},
+{id:2,svc:1,other:'',date:iso(now-DAY),time:'11:00',hours:1,addr:'Gran Vía 40, Bilbao',people:1,total:13,st:3,w:'Eder Fernandez',done:now-3*36e5,rating:null}],
+rates:[{w:'Ander Herrera',n:5,x:'Muy amable y puntual.'},{w:'Ander Herrera',n:4,x:'Me hizo mucha compañía.'},{w:'Eder Fernandez',n:5,x:'Me ayudó con el móvil con mucha paciencia.'},{w:'Eidan Irastorza',n:4,x:'Todo perfecto en la farmacia.'}],
+plans:[{id:1,t:['Paseo por Doña Casilda','Paseoa Doña Casildan'],when:['Jueves 11:00','Osteguna 11:00'],p:['Amaia','Josu'],c:[{n:'Amaia',x:'¿Quedamos en la entrada del estanque?'},{n:'Ander (acompañante)',x:'Perfecto, os espero allí a las 11.'}]},
+{id:2,t:['Café en Indautxu','Kafea Indautxun'],when:['Viernes 17:00','Ostirala 17:00'],p:['Begoña'],c:[{n:'Begoña',x:'¡Qué ganas de un buen café con vosotros!'}]},
+{id:3,t:['Compras en La Ribera','Erosketak Erriberan'],when:['Sábado 10:30','Larunbata 10:30'],p:['Mikel'],c:[]}]};
+try{const x=JSON.parse(localStorage.getItem('hurbil4'));if(x)S=Object.assign(S,x,{v:'home',err:'',msg:'',rt:{},modal:null})}catch(e){}
+const save=()=>{try{const{lang,fs,hc,easy,prof,reqs,rates,plans,th,neigh,wall}=S;localStorage.setItem('hurbil4',JSON.stringify({lang,fs,hc,easy,prof,reqs,rates,plans,th,neigh,wall}))}catch(e){}};
+const li=()=>S.lang==='eu'?1:0;
+const t=(k,...a)=>D[k][li()].replace(/\{(\d)\}/g,(m,i)=>a[i]);
+const esc=s=>String(s).replace(/[&"<>]/g,c=>({'&':'&amp;','"':'&quot;','<':'&lt;','>':'&gt;'}[c]));
+const fmt=n=>(Math.round(n*100)/100).toFixed(2).replace('.',',').replace(',00','');
+const sp=x=>`<button class="spk" data-say="${esc(x)}" aria-label="${t('listen')}">🔊</button>`;
+const H=(x,tag='h2',cls='')=>`<div class="row ${cls}"><${tag}>${esc(x)}</${tag}>${sp(x)}</div>`;
+const P=(x,cls='')=>`<div class="row ${cls}"><p>${esc(x)}</p>${sp(x)}</div>`;
+const disc=n=>n>=3?.2:n==2?.15:0;
+const SUB=[[["Paseo tranquilo por el barrio","Auzoan paseo lasaia"],["Parques o zonas verdes","Parkeak edo gune berdeak"],["Compañía para tomar un café o charlar","Lagunartea kafea hartzeko edo hitz egiteko"]],
+[["Compra en supermercado/tienda","Erosketak supermerkatuan/dendan"],["Ir a la farmacia a por medicación","Farmaziara sendagaien bila joan"],["Recoger/enviar paquetes o correos","Paketeak edo postak jaso/bidali"],["Acompañamiento a compras","Erosketetan laguntza"]],
+[["Configurar móvil o WhatsApp","Mugikorra edo WhatsApp konfiguratu"],["Pedir cita médica / Osakidetza","Hitzordu medikoa / Osakidetza"],["Trámites bancarios o papeles","Banku-izapideak edo paperak"],["Videollamada con familiares","Bideo-deia familiarrekin"]],
+[["Ir y volver del centro de salud","Osasun-zentrora joan eta etorri"],["Consulta en hospital (Basurto, Cruces, etc.)","Kontsulta ospitalean (Basurto, Gurutzeta, etab.)"],["Recogida de recetas o resultados","Errezetak edo emaitzak jaso"]],
+[["Lectura o juegos de mesa","Irakurketa edo mahai-jokoak"],["Charla y compañía","Berriketa eta lagunartea"],["Álbumes de fotos y recuerdos","Argazki-albumak eta oroitzapenak"]],
+[["Ordenar habitaciones/armarios","Gelak/armairuak ordenatu"],["Preparar comida sencilla","Janari xumea prestatu"],["Regar plantas y cuidado básico","Landareak ureztatu eta oinarrizko zaintza"]]];
+const svcName=r=>{if(r.svc>5)return r.other||t('s6');const n=SUB[r.svc].length,x=r.sub==null?'':r.sub>=n?(r.other||t('oth')):SUB[r.svc][r.sub][li()];return t('s'+r.svc)+(x?' · '+x:'')};
+const LOGO=`<svg class="logo" viewBox="0 0 160 112" role="img" aria-label="Hurbil · Siempre cerca de ti"><circle cx="50" cy="12" r="10" fill="#638BB2"/><rect x="38" y="26" width="24" height="46" rx="12" fill="#638BB2"/><circle cx="110" cy="12" r="10" fill="#74A88E"/><rect x="98" y="26" width="24" height="46" rx="12" fill="#74A88E"/><rect x="56" y="40" width="24" height="12" rx="6" fill="#638BB2"/><rect x="80" y="40" width="24" height="12" rx="6" fill="#74A88E"/><text x="80" y="95" text-anchor="middle" font-family="Fredoka,Nunito,system-ui" font-weight="700" font-size="28" fill="#638BB2">Hurbil</text><text x="80" y="109" text-anchor="middle" font-family="Nunito,system-ui" font-weight="700" font-size="10.5" fill="#638BB2">Siempre cerca de ti</text></svg>`;
+const LOGOI=LOGO.replace(/<text.*?<\/text>/g,'').replace('viewBox="0 0 160 112"','viewBox="34 0 92 74"');
+const avg=w=>{const a=S.rates.filter(r=>r.w===w);return a.length?(a.reduce((s,r)=>s+r.n,0)/a.length).toFixed(1).replace('.',','):null};
+const back=`<button class="btn back" onclick="A.go('home')">${'${B}'}</button>`;
+const BK=()=>`<button class="btn back" onclick="A.go('home')">${t('home')}</button>`;
+let curTxt=null,curU=null;
+function mark(){document.querySelectorAll('[data-say]').forEach(b=>{const on=b.dataset.say===curTxt;b.classList.toggle('talk',on);b.textContent=on?'⏹️':'🔊';b.setAttribute('aria-pressed',on)})}
+function stop(){if('speechSynthesis' in window)speechSynthesis.cancel();curTxt=null;curU=null;mark()}
+function say(x){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const eu=S.lang==='eu',u=new SpeechSynthesisUtterance(x);u.lang=eu?'eu-ES':'es-ES';const v=speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith(eu?'eu':'es'));if(v){u.voice=v;u.lang=v.lang}else u.lang='es-ES';u.rate=.9;curTxt=x;curU=u;u.onend=u.onerror=()=>{if(curU===u){curTxt=null;curU=null;mark()}};speechSynthesis.speak(u);mark()}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(!b)return;if(curTxt===b.dataset.say)stop();else say(b.dataset.say)});
+
+const A={
+go(v){S.v=v;S.modal=null;S.cv=null;S.msg='';S.err='';if(location.hash)location.hash='';else R();scrollTo(0,0)},
+lang(l){S.lang=l;R()},fs(d){S.fs=Math.min(1.7,Math.max(.8,S.fs+d));R()},
+hc(){S.hc^=1;R()},easy(){S.easy^=1;R()},
+set(k,v){S.w[k]=v;S.err='';R()},
+q(k,d){if(k==='d')S.w.date=iso(Date.now()+d*DAY);else{S.w.time=d;if(!S.w.date)S.w.date=iso(Date.now())}S.err='';R()},
+prev(){S.err='';S.w.s>1?S.w.s--:A.go('home');R()},
+next(){const w=S.w;let ok=true;
+if(w.s==1)ok=w.svc!==null&&(w.svc==6?w.other.trim():w.sub!==null&&(w.sub<SUB[w.svc].length||w.other.trim()));
+if(w.s==2)ok=w.mode!='m'||w.plan!==null;
+if(w.s==3)ok=w.date&&w.time;
+if(w.s==4)ok=w.name.trim()&&w.addr.trim()&&w.phone.trim()&&w.tasks.trim()&&(!w.pub||w.barrio.trim());
+if(!ok){S.err=t('need');R();return}S.err='';if(w.s==3){if(!w.name)w.name=S.prof.name||'';if(!w.addr)w.addr=S.prof.addr||'';if(!w.phone&&/^[\d\s+]{9,}$/.test(S.prof.contact||''))w.phone=S.prof.contact;if(!w.tasks)w.tasks=svcName(w)}w.s++;R();scrollTo(0,0)},
+confirm(){const w=S.w,n=1+w.share,q=quote(w),tot=q.g*(w.mode=='h'?1-disc(n):1);if(w.mode!='h')S.prof.plan=w.mode=='m'?PL[w.plan].n:q.l;
+S.reqs.push({id:Date.now(),svc:w.svc,sub:w.sub,other:w.other,date:w.date,time:w.time,hours:q.h,mode:w.mode,pl:w.plan,addr:w.addr,phone:w.phone,tasks:w.tasks,notes:w.notes,people:n,total:tot,st:0,w:'',done:0,rating:null});
+if(w.pub){const[y,m,d]=w.date.split('-');S.wall.unshift({id:Date.now()+1,n:S.prof.name,u:S.prof.user,cat:[0,2,3,4,1,5,1][w.svc],d:d+'/'+m+'/'+y,tm:w.time,b:w.barrio,j:[S.prof.name],nid:0})}
+S.w={s:1,mode:'h',bh:5,plan:null,name:'',phone:'',tasks:'',notes:'',pub:0,barrio:'',svc:null,sub:null,other:'',date:'',time:'',hours:1,addr:'',share:0};S.v='reqs';S.msg=t('done');R();scrollTo(0,0)},
+wa(id){const r=S.reqs.find(x=>x.id==id),f=(S.prof.fam||'').replace(/\D/g,'');
+if(!f){alert(t('nofam'));return}
+const m=t('wamsg',svcName(r),r.date,r.time,r.addr,r.w||t('nobody'));
+window.open('https://wa.me/'+(f.length==9?'34'+f:f)+'?text='+encodeURIComponent(m),'_blank')},
+star(id,n){S.rt[id]=n;R()},
+rate(id){const r=S.reqs.find(x=>x.id==id),n=S.rt[id]||0;if(!n){S.err=t('need');R();return}
+const x=(document.getElementById('c'+id)||{}).value||'';r.rating={n,x};S.rates.push({w:r.w,n,x});R()},
+join(id){const p=S.plans.find(x=>x.id==id),i=p.p.indexOf(S.prof.name);i<0?p.p.push(S.prof.name):p.p.splice(i,1);R()},
+chat(id){const el=document.getElementById('m'+id),x=el.value.trim();if(!x)return;S.plans.find(p=>p.id==id).c.push({n:S.prof.name,x,me:1});R()},
+saveProf(){S.msg=t('saved');R()},
+aw(id,v){const r=S.reqs.find(x=>x.id==id);r.w=v;if(v&&r.st==0)r.st=1;R()},
+as(id,v){const r=S.reqs.find(x=>x.id==id);r.st=+v;if(r.st==3&&!r.done)r.done=Date.now();if(r.st>0&&r.st<4&&!r.w)r.w=W[0];R()},
+sim(id){A.as(id,3)},
+cat(i){S.w.svc=i;S.w.sub=null;S.w.other='';S.err='';R()},
+sub(j){S.w.sub=j;if(j<SUB[S.w.svc].length)S.w.other='';S.err='';R()},
+modal(m){S.modal=m;R();if(m==='sos')say(t('sos2')+'. '+t('sosd')+': '+S.prof.addr)},
+ct(k){S.ct=k;R()},
+csend(){const el=document.getElementById('cm'),x=el.value.trim();if(!x)return;const k=S.cv,c=S.th[k]=S.th[k]||[];c.push({n:S.prof.name.split(' ')[0],x,me:1});if(k=='team')c.push({n:'Hurbil',x:t('autoreply')});R()},
+waSos(){const f=(S.prof.fam||'').replace(/\D/g,'');if(!f){alert(t('nofam'));return}window.open('https://wa.me/'+(f.length==9?'34'+f:f)+'?text='+encodeURIComponent(t('wasosm',S.prof.addr)),'_blank')},
+tab(k){S.tab=k;R()},fol(id){const v=S.neigh.find(x=>x.id==id);v.f^=1;if(v.f&&v.k)v.m=1;R()},
+au(k){S.au=k;S.err='';R()},spw(){S.sp^=1;R()},
+login(){const f=S.fm,p=S.prof;if(f.user&&(f.user==p.user||f.user==p.contact)&&f.pass==p.pass){p.in=1;S.err='';S.v='home'}else S.err=t('badlogin');R()},
+create(){const f=S.fm;if(!f.name.trim()||!f.user.trim()||!f.contact.trim()||f.pass.length<4){S.err=t('needall');R();return}S.prof=Object.assign({},S.prof,f,{in:1,addr:f.addr||S.prof.addr,fam:f.fam||S.prof.fam});S.err='';S.msg=t('saved');R()},
+logout(){S.prof.in=0;S.fm.user='';S.fm.pass='';S.au='login';R()},
+bono(h){S.w.mode='b';S.w.bh=h;S.w.cv=0;S.err='';R()},
+plan(i){S.w.mode='m';S.w.plan=i;S.err='';R()},
+bh(d){const w=S.w,n=Math.min(30,Math.max(5,w.bh+d));w.cv=(d>0&&(n==10||n==20))?n:0;w.bh=n;R()},
+openChat(k){S.v='chats';S.cv=k;S.modal=null;if(location.hash)location.hash='';else R();scrollTo(0,0)},
+chatWall(id){const p=S.wall.find(x=>x.id==id),v=S.neigh.find(x=>x.id==p.nid);if(!v)return;v.f=1;v.m=1;v.r=1;A.openChat('n'+v.id)},
+wj(id){const p=S.wall.find(x=>x.id==id),n=S.prof.name,i=p.j.indexOf(n);i<0?p.j.push(n):p.j.splice(i,1);R()},
+pubw(){const f=S.np;if(!f.d||!f.tm||!f.b.trim()){S.err=t('need');R();return}const[y,m,d]=f.d.split('-');S.wall.unshift({id:Date.now(),n:S.prof.name,u:S.prof.user,cat:+f.cat,d:d+'/'+m+'/'+y,tm:f.tm,b:f.b,j:[S.prof.name],nid:0});S.np={cat:0,d:'',tm:'',b:''};S.err='';R()},
+alogin(){if(document.getElementById('ap').value==='hurbil2026'){S.adm=1;S.err=''}else S.err=t('badpass');R()},
+alogout(){S.adm=0;R()}
+};
+
+function home(){const q=t('hq'),sub=t('hsub'),st=t('safe'),tx=t('safetxt');
+return `<div class="row"><h1>👋 ${esc(q)}</h1>${sp(q+'. '+sub)}</div><p class="muted">${esc(sub)}</p>
+<div class="stack"><div class="hb"><button class="big pri" onclick="A.go('ask')">🤝 ${t('b1')}</button>${sp(t('b1'))}</div>
+<div class="hb"><button class="big" onclick="A.go('reqs')">📋 ${t('b2')} (${S.reqs.length})</button>${sp(t('b2'))}</div>
+<div class="hb"><button class="big" onclick="A.go('comm')">🤝 ${t('b3')}</button>${sp(t('b3'))}</div>
+<div class="hb"><a class="big" href="tel:644270017">📞 ${t('call2')}</a>${sp(t('call2'))}</div></div>
+<div class="card"><div class="row"><h3>🏠 ${esc(st)}</h3>${sp(st+'. '+tx)}</div><p>${esc(tx)}</p><p class="muted small sec">${esc(t('team'))}</p></div>`}
+
+function ask(){const w=S.w;let b='';
+const ta=`<div class="row" style="padding:.3rem .5rem"><textarea id="oth" rows="3" aria-label="${t('otherph')}" placeholder="${t('otherph')}" oninput="S.w.other=this.value">${esc(w.other)}</textarea>${sp(t('otherph'))}</div>`;
+const card=(on,act,title,small,say)=>`<div class="svc ${on?'on':''}"><div class="row"><button class="pick" aria-pressed="${on}" onclick="${act}"><span>${title}${small?`<small>${small}</small>`:''}</span></button>${sp(say)}</div></div>`;
+const fd=(k,lab,type='text',ph='')=>`<label for="f_${k}">${t(lab)}</label><div class="row"><input id="f_${k}" type="${type}" placeholder="${ph}" value="${esc(w[k])}" oninput="S.w.${k}=this.value">${sp(t(lab))}</div>`;
+const ar=(k,lab,r)=>`<label for="f_${k}">${t(lab)}</label><div class="row"><textarea id="f_${k}" rows="${r}" oninput="S.w.${k}=this.value">${esc(w[k])}</textarea>${sp(t(lab))}</div>`;
+if(w.s==1)b=H(t('q1'))+SV.map((ic,i)=>{const on=w.svc===i,x=t('s'+i)+(i<6?'. '+t('price'):'');let sub='';
+if(on&&i<6){const L=SUB[i],n=L.length;sub=`<div class="pills">`+[...L.map(y=>y[li()]),t('oth')].map((y,j)=>`<span class="pw"><button class="pl ${w.sub===j?'on':''}" aria-pressed="${w.sub===j}" onclick="A.sub(${j})">${esc(y)}</button>${sp(y).replace('class="spk"','class="spk sm"')}</span>`).join('')+`</div>`+(w.sub===n?ta:'')}
+if(on&&i==6)sub=ta;
+return `<div class="svc ${on?'on':''}"><div class="row"><button class="pick" aria-pressed="${on}" onclick="A.cat(${i})"><span class="ic">${ic}</span><span>${t('s'+i)}${i<6?`<small>${t('price')}</small>`:''}</span></button>${sp(x)}</div>${sub}</div>`}).join('');
+if(w.s==2)b=H(t('q2'))+card(w.mode=='h',"A.set('mode','h')",t('m_h'),'',t('m_h'))+
+BN.map(h=>{const p=bono(h)[1],x=t('recb',h,fmt(p));return card(w.mode=='b'&&bono(w.bh)[0]==h,`A.bono(${h})`,x,fmt(p/h)+' €/h',x)}).join('')+H(t('mon'),'h3')+
+PL.map((p,i)=>{const x=p.n+' · '+t('permes',p.p);return card(w.mode=='m'&&w.plan===i,`A.plan(${i})`,x,p.d[li()],x+'. '+p.d[li()])}).join('');
+if(w.s==3){const q=quote(w);let hb='';
+if(w.mode=='h')hb=H(t('hoursl'),'h3')+`<div class="chips">`+[1,2,3,4,5,6].map(h=>`<button class="btn ${w.hours==h?'on':''}" onclick="A.set('hours',${h})">${h} ${t('hrs')}</button>`).join('')+`</div>`;
+if(w.mode=='b')hb=H(t('hoursl'),'h3')+`<div class="chips" style="align-items:center;justify-content:center"><button class="btn" aria-label="−1" onclick="A.bh(-1)">−</button><b style="font-size:2rem">${w.bh} h</b><button class="btn" aria-label="+1" onclick="A.bh(1)">+</button></div><p class="muted">${t('extraq')}</p>`+(w.cv?`<p class="badge">${t('conv',w.cv)}</p>`:'');
+if(w.mode=='m')hb=P(t('fixedh',q.h));
+b=H(t('q3'))+`<div class="card">${hb}${H(q.l,'h3')}</div><div class="chips">`+[['d',0,'today'],['d',1,'tomorrow'],['t','11:00','morn'],['t','17:00','aft']].map(x=>`<button class="btn ${(x[0]=='d'&&w.date==iso(Date.now()+x[1]*DAY))||(x[0]=='t'&&w.time==x[1])?'on':''}" onclick="A.q('${x[0]}','${x[1]}')">${t(x[2])}</button>`).join('')+`</div>
+<label for="d">${t('date')}</label><input id="d" type="date" min="${iso(Date.now())}" value="${w.date}" onchange="A.set('date',this.value)">
+<label for="tm">${t('time')}</label><input id="tm" type="time" value="${w.time}" onchange="A.set('time',this.value)">`}
+if(w.s==4)b=H(t('q4'))+`<div class="card">${fd('name','name')}${fd('addr','addr','text','Calle Ercilla 24, Bilbao')}${fd('phone','phone','tel','600 000 000')}${ar('tasks','tasks',3)}${ar('notes','notes',2)}</div>
+<div class="card">${H(t('shareq'),'h3')}${P(t('shareexp')+(w.mode=='h'?'':' '+t('nodisc')))}`+[0,1,2].map(i=>`<div class="svc ${w.share===i?'on':''}"><div class="row"><button class="pick" aria-pressed="${w.share===i}" onclick="A.set('share',${i})">${t('sh'+i)}</button>${sp(t('sh'+i))}</div></div>`).join('')+`</div>
+<div class="card"><div class="row"><label class="chk"><input type="checkbox" ${w.pub?'checked':''} onchange="A.set('pub',this.checked?1:0)"><span>${t('pubq')}</span></label>${sp(t('pubq'))}</div>${w.pub?fd('barrio','barrio2','text','Ametzola'):''}</div>`;
+if(w.s==5){const n=1+w.share,q=quote(w),d=w.mode=='h'?disc(n):0,g=q.g,tot=g*(1-d),sv=svcName(w);
+const txt=`${sv}. ${w.date} ${w.time}. ${q.l}. ${w.addr}. ${t('total')}: ${fmt(tot)} €`;
+b=H(t('q5'))+`<div class="card"><div class="row"><div><b>${esc(sv)}</b><br>📅 ${w.date} · ${w.time}<br>⏱ ${esc(q.l)}<br>👤 ${esc(w.name)} · 📞 ${esc(w.phone)}<br>📍 ${esc(w.addr)}<br>📝 ${esc(w.tasks)}${w.notes?'<br>🗒 '+esc(w.notes):''}${w.pub?'<br>👥 '+esc(w.barrio):''}</div>${sp(txt)}</div>
+<div class="bd"><div>${t('base')}: <b>${fmt(g)} €</b></div>${d?`<div>${t('disc')} (−${d*100} %): <b>−${fmt(g*d)} €</b></div>`:''}<div style="font-size:1.4rem">${t('total')}: <b>${fmt(tot)} €</b></div></div></div>
+<button class="big pri" onclick="A.confirm()"><span class="ic">✅</span>${t('confirm')}</button>`}
+return BK()+`<div class="card"><div class="row"><b>${t('step',w.s)}</b>${sp(t('step',w.s))}</div><div class="prog"><i style="width:${w.s*20}%"></i></div>${b}${S.err?`<p class="err" role="alert">${S.err}</p>`:''}
+<div class="chips" style="justify-content:space-between"><button class="btn" onclick="A.prev()">${t('prev')}</button>${w.s<5?`<button class="btn pri" onclick="A.next()">${t('next')}</button>`:''}</div></div>`}
+
+function reqs(){const L=[...S.reqs].sort((a,b)=>b.id-a.id),td=iso(Date.now());
+let b=BK()+(S.msg?`<div class="toast" role="status">${S.msg}</div>`:'')+H(t('b2'),'h1');
+if(!L.length)b+=P(t('noreq'));
+L.forEach(r=>{const nm=svcName(r),av=r.w?avg(r.w):null,sosOn=r.date===td&&r.st<3;
+const sm=`${nm}. ${r.date} ${r.time}. ${t('st'+r.st)}. ${r.w||t('nobody')}`;
+let rt='';
+if(r.st==3){if(r.rating)rt=`<p>${'★'.repeat(r.rating.n)}${'☆'.repeat(5-r.rating.n)} ${esc(r.rating.x)} <b>${t('thanks')}</b></p>`;
+else if(Date.now()-r.done<DAY)rt=`<h3>${t('rate',r.w||'')}</h3><div>`+[1,2,3,4,5].map(n=>`<button class="star ${(S.rt[r.id]||0)>=n?'on':''}" aria-label="${n}" onclick="A.star(${r.id},${n})">★</button>`).join('')+`</div><textarea id="c${r.id}" rows="2" placeholder="${t('comment')}"></textarea><button class="btn pri" onclick="A.rate(${r.id})">${t('send')}</button>`;
+else rt=`<p class="err">${t('late')}</p>`}
+b+=`<div class="card"><div class="row"><div><h3>${esc(nm)}</h3><span class="badge ${r.st==3?'st3':''}">${t('st'+r.st)}</span><p>📅 ${r.date} · ${r.time} · ${r.hours} ${t('hrs')}<br>📍 ${esc(r.addr)}<br>👤 ${esc(r.w||t('nobody'))}${av?' ★ '+av:''}<br>💶 ${fmt(r.total)} € · ${modeTxt(r)}</p></div>${sp(sm)}</div>
+${sosOn?`<div class="sos">${t('sos')}<br>${t('sosn')}<br><a href="tel:644270017">📞 644 270 017</a></div>`:''}
+<button class="btn wa" onclick="A.wa(${r.id})">💬 ${t('wa')}</button>${rt}</div>`});
+return b}
+
+function comm(){let b=BK()+H(t('b3'),'h1')+`<div class="chips">`+['wall','neigh','plans'].map(k=>`<button class="btn ${S.tab==k?'on':''}" onclick="A.tab('${k}')">${t('tab_'+k)}</button>`).join('')+`</div>`;
+if(S.tab=='wall')return b+wall();
+if(S.tab=='neigh'){b+=H(t('neighh'))+`<div class="grid">`+S.neigh.map(v=>{const mu=v.f&&v.m,x=`${v.n} ${v.u}. ${v.b}. ${v.i[li()]}`;return `<div class="card"><div class="row"><div><h3>${esc(v.n)}</h3><span class="muted">${esc(v.u)}</span><p>📍 ${esc(v.b)}<br>${esc(v.i[li()])}${v.m&&!v.f?`<br><span class="badge">${t('youf')}</span>`:''}</p></div>${sp(x)}</div><div class="chips"><button class="btn ${v.f?'on':''}" aria-pressed="${!!v.f}" onclick="A.fol(${v.id})">${v.f?'✓ '+t('fing'):'+ '+t('fol')}</button>${mu?`<button class="btn pri" onclick="A.openChat('n${v.id}')">${t('fchat')}</button>`:''}</div></div>`}).join('')+`</div>`;return b}
+S.plans.forEach(p=>{const me=p.p.includes(S.prof.name),n=p.p.length,d=disc(n),pr=13*(1-d),title=p.t[li()];
+const x=`${title}. ${p.when[li()]}. ${t('ppl',n,d*100,fmt(pr))}`;
+b+=`<div class="card"><div class="row"><div><h3>${esc(title)}</h3><p>🗓 ${p.when[li()]}<br>👥 ${esc(p.p.join(', '))}<br><span class="badge">${t('ppl',n,d*100,fmt(pr))}</span></p></div>${sp(x)}</div>
+<button class="btn ${me?'':'pri'}" onclick="A.join(${p.id})">${me?t('leave'):t('join')}</button>
+<div class="sec"><h3>💬 ${t('chat')}</h3>${p.c.map(m=>`<div class="row msg ${m.me?'me':''}"><div><b>${esc(m.n)}</b><br>${esc(m.x)}</div>${sp(m.n+'. '+m.x)}</div>`).join('')}
+<div class="row"><input id="m${p.id}" placeholder="${t('msgph')}" aria-label="${t('msgph')}" onkeydown="if(event.key==='Enter')A.chat(${p.id})"><button class="btn pri" onclick="A.chat(${p.id})">${t('send')}</button></div></div></div>`});
+return b}
+function F(o,P,k,lab,type='text',ph=''){const pw=k=='pass';return `<label for="f${k}">${t(lab)}</label><div class="row"><input id="f${k}" type="${pw?(S.sp?'text':'password'):type}" placeholder="${ph}" autocomplete="off" value="${esc(o[k])}" oninput="${P}.${k}=this.value">${pw?`<button class="btn" onclick="A.spw()">${S.sp?t('hide'):t('show')}</button>`:''}${sp(t(lab))}</div>`}
+function prof(){const p=S.prof,fl=(o,P)=>F(o,P,'name','fullname')+F(o,P,'user','user','text','@aimar_bilbao')+F(o,P,'contact','contact','text','correo@ejemplo.es')+F(o,P,'pass','pass')+F(o,P,'addr','barrio')+F(o,P,'fam','fam','tel','600 000 000');
+const er=S.err?`<p class="err" role="alert">${S.err}</p>`:'';
+if(p.in)return BK()+`<div class="card">${H(t('prof'),'h1')}${S.msg?`<div class="toast" role="status">${S.msg}</div>`:''}${fl(p,'S.prof')}<div class="chips"><button class="btn pri" onclick="A.saveProf()">${t('save')}</button><button class="btn" onclick="A.logout()">${t('logout')}</button></div></div>`+tarifas();
+return BK()+`<div class="card">${H(t('login')+' / '+t('create'),'h1')}<div class="chips">`+['login','create'].map(k=>`<button class="btn ${S.au==k?'on':''}" onclick="A.au('${k}')">${t(k)}</button>`).join('')+`</div>`+(S.au=='create'?fl(S.fm,'S.fm'):F(S.fm,'S.fm','user','user')+F(S.fm,'S.fm','pass','pass'))+er+`<button class="btn pri" style="margin-top:.8rem" onclick="A.${S.au}()">${t(S.au)}</button></div>`}
+const BN=[5,10,20],CATS=[['🚶','Paseo','Pasealdia'],['☕','Compañía','Lagunartea'],['🛒','Compras','Erosketak'],['📱','Móvil y trámites','Mugikorra eta izapideak'],['🏥','Salud','Osasuna'],['🏠','Hogar','Etxea']];
+const PL=[{h:12,p:132,n:'Plan Mensual Hurbil',d:['12 h/mes · 11 €/h · acompañante de confianza','12 h/hil · 11 €/h · konfiantzazko laguntzailea']},
+{h:8,p:92,n:'Plan Cercanía',d:['8 h/mes · 2 h/semana · 11,50 €/h · acompañante fijo','8 h/hil · 2 h/aste · 11,50 €/h · laguntzaile finkoa']},
+{h:16,p:176,n:'Plan Tranquilidad',d:['16 h/mes · 4 h/semana · 11 €/h · prioridad de horario y seguimiento familiar','16 h/hil · 4 h/aste · 11 €/h · ordutegi lehentasuna eta familiaren jarraipena']},
+{h:30,p:300,n:'Plan Contigo Siempre',d:['30 h/mes · acompañamiento diario · 10 €/h · atención preferente','30 h/hil · eguneroko laguntza · 10 €/h · arreta lehenetsia']}];
+const bono=h=>h>=20?[20,220+(h-20)*12.5]:h>=10?[10,115+(h-10)*12.5]:[5,60+(h-5)*12.5];
+function quote(w){if(w.mode=='b'){const[b,p]=bono(w.bh),x=w.bh-b;return{h:w.bh,g:p,l:x?t('bonox',b,x)+' = '+fmt(p)+' €':t('bonol',b,fmt(p))}}
+if(w.mode=='m'){const p=PL[w.plan||0];return{h:p.h,g:p.p,l:p.n+' · '+t('permes',p.p)}}
+return{h:w.hours,g:w.hours*13,l:t('calc',w.hours,fmt(w.hours*13))}}
+const modeTxt=r=>r.mode=='m'?PL[r.pl||0].n:r.mode=='b'?t('tm_b'):t('tm_h');
+function tarifas(){const L=[['Horas sueltas: 13 €/hora (de 1 a 6 h).','Ordu bakarrak: 13 €/ordu (1etik 6ra).'],['Bono 5 h: 60 € (12 €/h). Horas extra a 12,50 €/h; a las 10 h pasa al Bono 10 h.','5 orduko bonua: 60 € (12 €/ordu). Ordu gehigarriak 12,50 €/orduko; 10 orduan 10 orduko bonura pasatzen da.'],['Bono 10 h: 115 € (11,50 €/h). Horas extra a 12,50 €/h; a las 20 h pasa al Bono 20 h.','10 orduko bonua: 115 € (11,50 €/ordu). Ordu gehigarriak 12,50 €/orduko; 20 orduan 20 orduko bonura pasatzen da.'],['Bono 20 h: 220 € (11 €/h).','20 orduko bonua: 220 € (11 €/ordu).'],...PL.map(p=>[p.n+': '+p.d[0],p.n+': '+p.d[1]])];
+return `<div class="card">${H(t('tar'),'h2')}<p class="badge">${t('myplan')}: ${esc(S.prof.plan||t('tm_h'))}</p>`+L.map(x=>P('• '+x[li()])).join('')+`</div>`}
+function modal(){if(S.modal!=='sos')return '';const ad=S.prof.addr||'Bilbao',al=t('sosd')+': '+ad;
+return `<div class="mod" role="dialog" aria-modal="true"><div class="mbox"><div class="row"><h2 style="color:#B94A48">${t('sos2')}</h2>${sp(t('sos2')+'. '+t('sosn2')+' '+al)}</div>
+<div class="sos" role="alert">${t('sosn2')}<br>📍 ${t('sosd')}: ${esc(ad)}</div>
+<a class="big sosb2" href="tel:644270017"><span class="ic">📞</span>644 270 017</a>
+<button class="big btn wa" style="font-size:1.2rem" onclick="A.waSos()">💬 ${t('wa')}</button><button class="btn" onclick="A.modal(null)">✕ ${t('close')}</button></div></div>`}
+function chats(){const msg=m=>`<div class="row msg ${m.me?'me':''}"><div><b>${esc(m.n)}</b><br>${esc(m.x)}</div>${sp(m.n+'. '+m.x)}</div>`;
+if(S.cv){const k=S.cv,v=S.neigh.find(x=>'n'+x.id==k),nm=k=='team'?t('supp'):v?v.n:'',c=S.th[k]||[];
+return `<button class="btn back" onclick="A.openChat(null)">${t('backl')}</button><div class="card"><div class="row"><h2>💬 ${esc(nm)}</h2>${sp(nm)}</div><div class="msgs">${c.map(msg).join('')}</div><div class="row"><input id="cm" placeholder="${t('msgph')}" aria-label="${t('msgph')}" onkeydown="if(event.key==='Enter')A.csend()"><button class="btn pri" onclick="A.csend()">${t('send')}</button></div></div>`}
+const mu=S.neigh.filter(v=>v.f&&v.m);
+return BK()+H(t('b_chats'),'h1')+`<div class="card"><div class="row"><p>🔒 ${t('mutual')}</p>${sp(t('mutual'))}</div></div>
+<div class="card"><div class="row"><button class="pick" onclick="A.openChat('team')"><span class="ic">🛟</span><span>${t('supp')}</span></button>${sp(t('supp'))}</div></div>`+
+(mu.length?mu.map(v=>{const r=t(v.r?'rplan':'rmut');return `<div class="card"><div class="row"><button class="pick" onclick="A.openChat('n${v.id}')"><span>${esc(v.n)} <span class="muted">${esc(v.u)}</span><small>${r}</small></span></button>${sp(v.n+'. '+r)}</div></div>`}).join(''):P(t('nomut')))}
+function wall(){const f=S.np;let b=`<div class="card">${H(t('newp'),'h3')}<label for="wc">${t('cat')}</label><select id="wc" onchange="S.np.cat=this.value">${CATS.map((c,i)=>`<option value="${i}" ${f.cat==i?'selected':''}>${c[0]} ${c[1+li()]}</option>`).join('')}</select>
+<label for="wd">${t('date')}</label><input id="wd" type="date" value="${f.d}" onchange="S.np.d=this.value"><label for="wt">${t('time')}</label><input id="wt" type="time" value="${f.tm}" onchange="S.np.tm=this.value"><label for="wb">${t('dist')}</label><input id="wb" value="${esc(f.b)}" placeholder="Ametzola" oninput="S.np.b=this.value">${S.err?`<p class="err" role="alert">${S.err}</p>`:''}<button class="btn pri" style="margin-top:.6rem" onclick="A.pubw()">${t('pub')}</button></div>`;
+S.wall.forEach(p=>{const c=CATS[p.cat],me=p.j.includes(S.prof.name),x=`${p.n} ${p.u}. ${c[1+li()]}. ${p.d} ${p.tm} ${p.b}. ${t('pj')}`;
+b+=`<div class="card"><div class="row"><div><h3>${esc(p.n)}</h3><span class="muted">${esc(p.u)}</span></div>${sp(x)}</div>
+<p>${c[0]} <b>${c[1+li()]}</b><br>📅 ${p.d} · ${p.tm} · 📍 ${esc(p.b)}</p><span class="badge">${t('pj')}</span>
+<div class="chips" style="align-items:center"><button class="btn ${me?'pri':''}" onclick="A.wj(${p.id})">${me?t('inplan'):t('joinp')}</button><b>${t('inter',p.j.length)}</b></div>
+${p.nid?`<button class="big bl" onclick="A.chatWall(${p.id})">${t('chatw',esc(p.n))}</button>`:''}</div>`});
+return b}
+function admin(){if(!S.adm)return BK()+`<div class="card">${H(t('admin'),'h1')}<label for="ap">${t('apass')}</label><input id="ap" type="password" autocomplete="off" onkeydown="if(event.key==='Enter')A.alogin()">${S.err?`<p class="err" role="alert">${S.err}</p>`:''}<button class="btn pri" onclick="A.alogin()">${t('enter')}</button></div>`;
+const o=(arr,sel)=>arr.map(([v,l])=>`<option value="${v}" ${v==sel?'selected':''}>${l}</option>`).join('');
+return BK()+H(t('admin'),'h1')+`<button class="btn" onclick="A.alogout()">${t('logout')}</button><div class="card tw" style="margin-top:1rem"><table><tr><th>#</th><th></th><th>${t('worker')}</th><th>${t('state')}</th><th></th></tr>`+
+S.reqs.map(r=>`<tr><td>${r.id>99?'·':r.id}</td><td><b>${esc(svcName(r))}</b><br>${r.date} ${r.time} · ${r.hours} ${t('hrs')} · ${fmt(r.total)} €<br>${esc(r.addr)}</td>
+<td><select aria-label="${t('worker')}" onchange="A.aw(${r.id},this.value)">${o([['',t('nobody')],...W.map(w=>[w,w])],r.w)}</select></td>
+<td><select aria-label="${t('state')}" onchange="A.as(${r.id},this.value)">${o([0,1,2,3,4].map(i=>[i,t('st'+i)]),r.st)}</select></td>
+<td><button class="btn pri" onclick="A.as(${r.id},1)">✅ ${t('accept')}</button> <button class="btn" onclick="A.as(${r.id},4)">❌ ${t('reject')}</button> <button class="btn" onclick="A.sim(${r.id})">${t('sim')}</button></td></tr>`).join('')+`</table></div>
+<div class="card tw">${H(t('accts'),'h2')}<table><tr><th>${t('fullname')}</th><th>@</th><th>${t('contact')}</th><th>${t('dist')}</th><th>${t('fam')}</th><th>${t('myplan')}</th></tr>`+
+[S.prof,...S.neigh].map(u=>`<tr><td>${esc(u.name||u.n)}</td><td>${esc(u.user||u.u||'')}</td><td>${esc(u.contact||u.c||'—')}</td><td>${esc(u.addr||u.b||'')}</td><td>${esc(u.fam||'—')}</td><td>${esc(u.plan||u.pl||t('tm_h'))}</td></tr>`).join('')+`</table></div>`+
+W.map(w=>{const a=S.rates.filter(r=>r.w===w);return `<div class="card"><h3>${w} · ${t('avg')}: ${avg(w)?'★ '+avg(w):t('none')}</h3>${a.map(r=>`<p>${'★'.repeat(r.n)}${'☆'.repeat(5-r.n)} ${esc(r.x)}</p>`).join('')}</div>`}).join('')}
+
+function R(){
+document.documentElement.lang=S.lang==='eu'?'eu':'es';
+document.documentElement.style.fontSize=(18*S.fs*(S.easy?1.2:1))+'px';
+document.body.classList.toggle('hc',!!S.hc);document.body.classList.toggle('easy',!!S.easy);
+$bar.innerHTML=`<div class="in"><button class="brand" onclick="A.go('home')" aria-label="Hurbil">${LOGOI}<span><b>${t('brand')}</b><small>📍 Bilbao</small></span></button>
+<div class="ctl"><div class="seg"><button class="sg ${S.lang=='es'?'on':''}" onclick="A.lang('es')" aria-label="Español">ES</button><button class="sg ${S.lang=='eu'?'on':''}" onclick="A.lang('eu')" aria-label="Euskara">EU</button></div>
+<div class="seg"><button class="sg" onclick="A.fs(-.1)" aria-label="A-">A-</button><button class="sg" onclick="A.fs(.1)" aria-label="A+">A+</button></div>
+<button class="circ" onclick="A.hc()" aria-pressed="${!!S.hc}" aria-label="${t('hc')}" title="${t('hc')}">◐</button>
+<button class="tg ${S.easy?'on':''}" role="switch" aria-checked="${!!S.easy}" onclick="A.easy()">${t('easy')}</button>
+<button class="pill" onclick="A.go('prof')">👤 ${esc((S.prof.name||'').split(' ')[0]||'—')}</button></div></div>`;
+$adm.textContent=t('admin');$ft.textContent=t('team')+' · Bilbao · Tel. 644 270 017';
+const v=location.hash==='#admin'?'admin':S.v;
+$app.innerHTML=({home,ask,reqs,comm,prof,admin,chats})[v]();
+$ov.innerHTML=`<div class="fabs"><button class="fab c" onclick="A.openChat(null)">💬 Chats</button><button class="fab s" onclick="A.modal('sos')">🆘 SOS</button></div>`+modal();
+const mm=document.querySelector('.msgs');if(mm)mm.scrollTop=1e9;mark();
+save()}
+const $bar=document.getElementById('bar'),$app=document.getElementById('app'),$adm=document.getElementById('adm'),$ov=document.getElementById('ov'),$ft=document.getElementById('ft');
+addEventListener('keydown',e=>{if(e.key==='Escape'&&S.modal){S.modal=null;R()}});
+addEventListener('hashchange',()=>{R();scrollTo(0,0)});
+R();
+</script>
+</body>
+</html>
