@@ -10,9 +10,9 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/Hurbill-app/logo.png",
+      "src": "/Hurbill-app/logo.webp",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/webp",
       "purpose": "any maskable"
     }
   ]
